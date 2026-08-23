@@ -30,10 +30,11 @@ com.myservicecards.my_service_cards
 │   ├── adapter
 │   │   ├── in
 │   │   │   └── web
-│   │   │       ├── BankController
-│   │   │       ├── CardProviderController
-│   │   │       ├── BankCardController
-│   │   │       ├── GlobalExceptionHandler
+│   │   │       ├── controller/
+│   │   │       │   ├── BankController
+│   │   │       │   ├── CardProviderController
+│   │   │       │   ├── BankCardController
+│   │   │       │   └── GlobalExceptionHandler
 │   │   │       └── dto/          # BankResponse, ProviderResponse, CreateCardRequest, CardResponse
 │   │   └── out
 │   │       ├── grpc
@@ -57,7 +58,7 @@ com.myservicecards.my_service_cards
 Client (JWT)
     │
     ▼
-BankCardController              ← infrastructure/adapter/in/web
+BankCardController              ← infrastructure/adapter/in/web/controller
     │
     ▼
 BankCardUseCase                 ← ports/in
@@ -130,7 +131,7 @@ Controllers depend on `ports.in`, never on JPA or gRPC directly.
 
 `BankCardRepositoryPort.save(BankCard, pan, cvv)` receives plaintext PAN/CVV once; the adapter encrypts them before writing.
 
-### Inbound adapters — REST
+### Inbound adapters — REST (`web/controller`)
 
 | Class | Base path |
 |-------|-----------|
@@ -211,6 +212,6 @@ Only `last_four_digits` (and non-sensitive metadata) should be exposed in normal
 1. Define or extend a port in `ports/in` or `ports/out`.
 2. Add domain logic in `domain/service`.
 3. Implement outbound port(s) under `infrastructure/adapter/out`.
-4. Expose via controller + DTOs under `infrastructure/adapter/in/web`.
+4. Expose via controllers under `infrastructure/adapter/in/web/controller` and DTOs under `infrastructure/adapter/in/web/dto`.
 
 Keep `domain/model` free of Spring/JPA annotations. Map between domain and infrastructure types in adapters/mappers only.

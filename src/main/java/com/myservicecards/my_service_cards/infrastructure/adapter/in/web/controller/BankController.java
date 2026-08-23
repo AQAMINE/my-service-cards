@@ -1,4 +1,4 @@
-package com.myservicecards.my_service_cards.infrastructure.adapter.in.web;
+package com.myservicecards.my_service_cards.infrastructure.adapter.in.web.controller;
 
 import com.myservicecards.my_service_cards.domain.model.Bank;
 import com.myservicecards.my_service_cards.infrastructure.adapter.in.web.dto.BankResponse;
