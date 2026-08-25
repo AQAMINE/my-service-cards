@@ -20,7 +20,11 @@ public class Bank {
     private String websiteUrl;
     private String primaryColor;
     private String logoUrl;
-    private boolean isSystem; // <-- Champ à ajouter
+    private Boolean isSystem = false;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public boolean isSystem() {
+        return Boolean.TRUE.equals(this.isSystem);
+    }
 }

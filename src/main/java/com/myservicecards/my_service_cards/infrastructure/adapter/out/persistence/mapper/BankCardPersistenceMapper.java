@@ -18,8 +18,15 @@ public class BankCardPersistenceMapper {
         if (entity.getBank() != null) {
             bank = Bank.builder()
                     .id(entity.getBank().getId())
+                    .userId(entity.getBank().getUserId())
                     .name(entity.getBank().getName())
                     .code(entity.getBank().getCode())
+                    .websiteUrl(entity.getBank().getWebsiteUrl())
+                    .primaryColor(entity.getBank().getPrimaryColor())
+                    .logoUrl(entity.getBank().getLogoUrl())
+                    .isSystem(entity.getBank().isSystem())
+                    .createdAt(entity.getBank().getCreatedAt() != null ? entity.getBank().getCreatedAt().atZone(java.time.ZoneOffset.UTC).toLocalDateTime() : null)
+                    .updatedAt(entity.getBank().getUpdatedAt() != null ? entity.getBank().getUpdatedAt().atZone(java.time.ZoneOffset.UTC).toLocalDateTime() : null)
                     .build();
         }
 
@@ -27,8 +34,12 @@ public class BankCardPersistenceMapper {
         if (entity.getProvider() != null) {
             provider = CardProvider.builder()
                     .id(entity.getProvider().getId())
+                    .userId(entity.getProvider().getUserId())
                     .name(entity.getProvider().getName())
                     .code(entity.getProvider().getCode())
+                    .logoUrl(entity.getProvider().getLogoUrl())
+                    .createdAt(entity.getProvider().getCreatedAt())
+                    .updatedAt(entity.getProvider().getUpdatedAt())
                     .build();
         }
 
@@ -49,7 +60,6 @@ public class BankCardPersistenceMapper {
                 .build();
     }
 
-    // Méthode rajoutée pour résoudre le Bug F (compile error)
     public BankCardEntity toEntity(BankCard domain) {
         if (domain == null) {
             return null;

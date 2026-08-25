@@ -7,9 +7,10 @@ import com.myservicecards.my_service_cards.infrastructure.adapter.out.persistenc
 import com.myservicecards.my_service_cards.infrastructure.adapter.out.persistence.entity.CardProviderEntity;
 import com.myservicecards.my_service_cards.infrastructure.adapter.out.persistence.mapper.BankCardPersistenceMapper;
 import com.myservicecards.my_service_cards.infrastructure.adapter.out.persistence.repository.SpringDataBankCardRepository;
+import com.myservicecards.my_service_cards.infrastructure.adapter.out.persistence.repository.SpringDataBankRepository;
+import com.myservicecards.my_service_cards.infrastructure.adapter.out.persistence.repository.SpringDataCardProviderRepository;
 import com.myservicecards.my_service_cards.ports.out.BankCardRepositoryPort;
 import com.myservicecards.my_service_cards.ports.out.CardCryptoPort;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +23,10 @@ import java.util.UUID;
 public class BankCardPersistenceAdapter implements BankCardRepositoryPort {
 
     private final SpringDataBankCardRepository bankCardRepository;
+    private final SpringDataBankRepository bankRepository;
+    private final SpringDataCardProviderRepository providerRepository;
     private final CardCryptoPort cardCryptoPort;
     private final BankCardPersistenceMapper mapper;
-    private final EntityManager entityManager;
 
     @Override
     public BankCard save(BankCard card, String pan, String cvv, String pin) {
@@ -35,8 +37,14 @@ public class BankCardPersistenceAdapter implements BankCardRepositoryPort {
         // 2. Mapping vers l'entité JPA
         BankCardEntity entity = mapper.toEntity(card);
 
-        entity.setBank(entityManager.getReference(BankEntity.class, card.getBank().getId()));
-        entity.setProvider(entityManager.getReference(CardProviderEntity.class, card.getProvider().getId()));
+        // Charger les entités complètes pour conserver toutes leurs propriétés (logoUrl, primaryColor, etc.)
+        BankEntity bankEntity = bankRepository.findById(card.getBank().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Bank not found"));
+        CardProviderEntity providerEntity = providerRepository.findById(card.getProvider().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Provider not found"));
+
+        entity.setBank(bankEntity);
+        entity.setProvider(providerEntity);
 
         entity.setEncryptedPan(panCrypto.ciphertext());
         entity.setPanIv(panCrypto.iv());

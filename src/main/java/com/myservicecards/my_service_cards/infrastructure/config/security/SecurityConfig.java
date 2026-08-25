@@ -51,7 +51,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         
         // En-têtes autorisés
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "X-User-Id"));
         
         // Exposer les headers si besoin dans la réponse
         configuration.setExposedHeaders(List.of("Authorization"));
