@@ -60,6 +60,12 @@ public class BankCardEntity {
     @Column(name = "cvv_iv", nullable = false)
     private String cvvIv;
 
+    @Column(name = "encrypted_pin")
+    private String encryptedPin;
+
+    @Column(name = "pin_iv")
+    private String pinIv;
+
     @Builder.Default
     @Column(name = "is_active", nullable = true)
     private boolean active = true;

@@ -27,23 +27,28 @@ public class BankCardPersistenceAdapter implements BankCardRepositoryPort {
     private final EntityManager entityManager;
 
     @Override
-    public BankCard save(BankCard card, String pan, String cvv) {
+    public BankCard save(BankCard card, String pan, String cvv, String pin) {
         // 1. Chiffrement gRPC via my-service-crypto
         CryptoResult panCrypto = cardCryptoPort.encrypt(pan, card.getUserId());
         CryptoResult cvvCrypto = cardCryptoPort.encrypt(cvv, card.getUserId());
 
         // 2. Mapping vers l'entité JPA
         BankCardEntity entity = mapper.toEntity(card);
-        
-        // Résolution propre des références étrangères via EntityManager proxy
+
         entity.setBank(entityManager.getReference(BankEntity.class, card.getBank().getId()));
         entity.setProvider(entityManager.getReference(CardProviderEntity.class, card.getProvider().getId()));
-        
-        // Affectation du Ciphertext et de l'IV (AES-GCM)
+
         entity.setEncryptedPan(panCrypto.ciphertext());
         entity.setPanIv(panCrypto.iv());
         entity.setEncryptedCvv(cvvCrypto.ciphertext());
         entity.setCvvIv(cvvCrypto.iv());
+
+        // 3. Chiffrement facultatif du PIN si fourni
+        if (pin != null && !pin.isBlank()) {
+            CryptoResult pinCrypto = cardCryptoPort.encrypt(pin, card.getUserId());
+            entity.setEncryptedPin(pinCrypto.ciphertext());
+            entity.setPinIv(pinCrypto.iv());
+        }
 
         BankCardEntity savedEntity = bankCardRepository.save(entity);
         return mapper.toDomain(savedEntity);
@@ -77,6 +82,18 @@ public class BankCardPersistenceAdapter implements BankCardRepositoryPort {
                 .orElseThrow(() -> new IllegalArgumentException("Card not found"));
 
         return cardCryptoPort.decrypt(entity.getEncryptedCvv(), entity.getCvvIv(), userId);
+    }
+
+    @Override
+    public String findDecryptedPin(UUID cardId, UUID userId) {
+        BankCardEntity entity = bankCardRepository.findByIdAndUserIdAndActiveTrue(cardId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("Card not found"));
+
+        if (entity.getEncryptedPin() == null || entity.getPinIv() == null) {
+            return null;
+        }
+
+        return cardCryptoPort.decrypt(entity.getEncryptedPin(), entity.getPinIv(), userId);
     }
 
     @Override

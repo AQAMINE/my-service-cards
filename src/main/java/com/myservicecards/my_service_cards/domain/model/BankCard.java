@@ -25,6 +25,8 @@ public class BankCard {
     private String cardColor;
     private String encryptedPan;
     private String encryptedCvv;
+    private String encryptedPin;
+    private String pinIv;
     private boolean active;
     private Instant createdAt;
     private Instant updatedAt;

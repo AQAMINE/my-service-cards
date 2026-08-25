@@ -16,11 +16,14 @@ public interface BankCardUseCase {
             int expiryMonth,
             int expiryYear,
             String cardColor,
+            String pin,
             UUID userId
     );
 
     List<BankCard> getUserCards(UUID userId);
     String getDecryptedPan(UUID cardId, UUID userId);
     String getDecryptedCvv(UUID cardId, UUID userId);
+    // Rajout:
+    String getDecryptedPin(UUID cardId, UUID userId);
     void deleteCard(UUID cardId, UUID userId);
 }

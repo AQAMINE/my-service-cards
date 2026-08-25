@@ -38,5 +38,9 @@ public record CreateCardRequest(
         @Min(value = 2025, message = "Year must be current or future")
         Integer expiryYear,
 
+        @NotBlank(message = "PIN is required")
+        @Pattern(regexp = "^[0-9]{4}$", message = "Invalid PIN format")
+        String pin,
+
         String cardColor
 ) {}

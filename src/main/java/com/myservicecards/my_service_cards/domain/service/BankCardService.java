@@ -28,6 +28,7 @@ public class BankCardService implements BankCardUseCase {
             int expiryMonth,
             int expiryYear,
             String cardColor,
+            String pin,
             UUID userId) {
 
         String lastFourDigits = (pan != null && pan.length() >= 4) 
@@ -47,7 +48,7 @@ public class BankCardService implements BankCardUseCase {
                 .active(true)
                 .build();
 
-        return bankCardRepositoryPort.save(card, pan, cvv);
+        return bankCardRepositoryPort.save(card, pan, cvv, pin);
     }
 
     @Override
@@ -68,5 +69,10 @@ public class BankCardService implements BankCardUseCase {
     @Override
     public void deleteCard(UUID cardId, UUID userId) {
         bankCardRepositoryPort.deleteByIdAndUserId(cardId, userId);
+    }
+
+    @Override
+    public String getDecryptedPin(UUID cardId, UUID userId) {
+        return bankCardRepositoryPort.findDecryptedPin(cardId, userId);
     }
 }

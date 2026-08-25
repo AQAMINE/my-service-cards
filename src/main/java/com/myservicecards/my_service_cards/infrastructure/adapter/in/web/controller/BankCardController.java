@@ -44,6 +44,7 @@ public class BankCardController {
                 request.expiryMonth(),
                 request.expiryYear(),
                 request.cardColor(),
+                request.pin(),
                 userId
         );
 
@@ -101,6 +102,20 @@ public class BankCardController {
 
         bankCardUseCase.deleteCard(cardId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{cardId}/reveal-pin")
+    public ResponseEntity<Map<String, String>> getDecryptedPin(
+            @PathVariable UUID cardId,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID userId = extractUserId(jwt);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String pin = bankCardUseCase.getDecryptedPin(cardId, userId);
+        return ResponseEntity.ok(Map.of("pin", pin));
     }
 
     private UUID extractUserId(Jwt jwt) {
