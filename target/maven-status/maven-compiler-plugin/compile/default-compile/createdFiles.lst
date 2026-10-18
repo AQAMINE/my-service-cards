@@ -1,0 +1,13 @@
+com/myservice/crypto/grpc/CryptoServiceGrpc$2.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$AsyncService.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$CryptoServiceImplBase.class
+com/myservice/crypto/grpc/CryptoServiceGrpc.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$CryptoServiceStub.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$1.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$CryptoServiceMethodDescriptorSupplier.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$CryptoServiceBlockingStub.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$3.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$MethodHandlers.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$CryptoServiceFutureStub.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$CryptoServiceFileDescriptorSupplier.class
+com/myservice/crypto/grpc/CryptoServiceGrpc$CryptoServiceBaseDescriptorSupplier.class
